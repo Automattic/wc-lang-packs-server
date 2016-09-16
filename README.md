@@ -1,7 +1,7 @@
 wc-lang-packs-server
 ====================
 
-`wc-lang-packs-server`k serves the translation API for WooCommerce extension and
+`wc-lang-packs-server` serves the translation API for WooCommerce extension and
 language packs (zip file containing .mo and .po files).
 
 ## Quick Install
