@@ -2,7 +2,11 @@ wc-lang-packs-server
 ====================
 
 `wc-lang-packs-server` serves the translation API for WooCommerce extension and
-language packs (zip file containing .mo and .po files).
+language packs (zip file containing .mo and .po files). The server fetches
+the data from GlotPress instance periodically (`notified` mode is being worked),
+and translation states of WooCommerce extensions are stored in a in-memory DB.
+The server also create the archive for `.po` and `.mo` (or called Language Packs)
+and serves it.
 
 ## Quick Install
 
@@ -62,3 +66,53 @@ Usage of ./wc-lang-packs-server:
   -update-key string
        	Key to post update if mode is notified (default "my-secret-key")
 ```
+
+## API
+
+Currently only plugin is supported. The endpoint for themes is added already
+but doesn't do anything right now.
+
+```
+/api/v1/plugins?slug={extension-slug}&version=x.y.z&locale=pt_BR
+/api/v1/themes?slug={extension-slug}&version=x.y.z&locale=pt_BR
+```
+
+`slug` and `version` in query string is required while `locale` is optional.
+
+### Request
+
+This will returns list of available translations for woocommerce-bookings version
+1.9.12. To limit to specific locale, pass `locale` in query string.
+
+```
+GET /api/v1/plugins/?slug=woocommerce-bookings&version=1.9.12
+```
+
+
+### Response
+
+```
+{
+  "es_ES": {
+    "language": "es_ES",
+    "last_modified": "",
+    "english_name": "Spanish (Spain)",
+    "native_name": "Español",
+    "package": "104.236.97.246/downloads/woocommerce-bookings/1.9.12/woocommerce-bookings-1.9.12-es_ES.zip"
+  },
+  "pt_BR": {
+    "language": "pt_BR",
+    "last_modified": "",
+    "english_name": "Portuguese (Brazil)",
+    "native_name": "Português do Brasil",
+    "package": "104.236.97.246/downloads/woocommerce-bookings/1.9.12/woocommerce-bookings-1.9.12-pt_BR.zip"
+  }
+}
+```
+
+## WIP
+
+* Notified mode. Will need GP plugin to ping the server when certain project
+  reaches a treshold completion.
+* Saves the in-memory DB periodically.
+* Mutex should be applied maybe? Only one writer atm.
