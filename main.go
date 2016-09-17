@@ -85,6 +85,7 @@ type SubProject struct {
 }
 
 var (
+	baseURL       = flag.String("baseurl", "https://translation.woocommerce.com", "Base URL to access this server")
 	gpURL         = flag.String("gpURL", "https://translate.wordpress.com/projects/", "Root project of GlotPress")
 	gpApiURL      = flag.String("gpApiURL", "https://translate.wordpress.com/api/projects/", "Root API project of GlotPress")
 	dbPath        = flag.String("db", os.TempDir()+"wc-lang-packs.db", "Full path to DB file")
@@ -334,7 +335,7 @@ func getApiURL(path string) string {
 
 // getPackageURL returns language packs download URL for a given path and language package file.
 func getPackageURL(path, lpName string) string {
-	return "/downloads/" + path + "/" + lpName
+	return *baseURL + "/downloads/" + path + "/" + lpName
 }
 
 // buildPackageZip builds the language pack file, .zip file containing .po and
