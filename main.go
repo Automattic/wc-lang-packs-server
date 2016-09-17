@@ -88,14 +88,14 @@ var (
 	baseURL       = flag.String("baseurl", "https://translation.woocommerce.com", "Base URL to access this server")
 	gpURL         = flag.String("gpURL", "https://translate.wordpress.com/projects/", "Root project of GlotPress")
 	gpApiURL      = flag.String("gpApiURL", "https://translate.wordpress.com/api/projects/", "Root API project of GlotPress")
-	dbPath        = flag.String("db", os.TempDir()+"wc-lang-packs.db", "Full path to DB file")
+	dbPath        = flag.String("db", "/tmp/wc-lang-packs/server.db", "Full path to DB file")
 	seedDb        = flag.Bool("seed", false, "Seed the DB before serving requests")
 	exposeDb      = flag.Bool("exposedb", false, "Expose /_db/ to dump in-memory DB as JSON")
 	listenAddr    = flag.String("listen", ":8081", "HTTP listen address")
 	mode          = flag.String("mode", "poll", "Check mode, 'poll' or 'notified'")
 	pollInterval  = flag.Duration("poll-interval", time.Minute*10, "Interval to poll translate.wordpress.com API if mode is poll")
 	postKey       = flag.String("update-key", "my-secret-key", "Key to post update if mode is notified")
-	downloadsPath = flag.String("downloads-path", os.TempDir()+"downloads", "Full path to serve language packs files")
+	downloadsPath = flag.String("downloads-path", "/tmp/wc-lang-packs/downloads", "Full path to serve language packs files")
 
 	// Translations mapped by project, version, and wp_locale.
 	db map[string]map[string]map[string]*Translation
