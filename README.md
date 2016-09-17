@@ -11,10 +11,24 @@ First, you need to:
 * Install [Go](https://golang.org/doc/install)
 * Clone this repo
 
-Inside this repo:
+Inside cloned repo:
 
 ```
-go build
+go build -o server
+./server -baseurl="http://localhost" -listen=":8081"
+```
+
+Your server now can be accessed:
+
+```
+curl -i http://localhost:8081/api/v1/plugins?slug=woocommerce-bookings&version=1.9.12
+
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=UTF-8
+Date: Sat, 17 Sep 2016 05:03:59 GMT
+Content-Length: 440
+
+{"es_ES":{"language":"es_ES","last_modified":"","english_name":"Spanish (Spain)","native_name":"Español","package":"http://localhost/downloads/woocommerce-bookings/1.9.12/woocommerce-bookings-1.9.12-es_ES.zip"},"pt_BR":{"language":"pt_BR","last_modified":"","english_name":"Portuguese (Brazil)","native_name":"Português do Brasil","package":"http://localhost/downloads/woocommerce-bookings/1.9.12/woocommerce-bookings-1.9.12-pt_BR.zip"}}
 ```
 
 ## Usage
@@ -22,13 +36,15 @@ go build
 See `-h` for available flags.
 
 ```
-$ wc-lang-packs-server
+$ wc-lang-packs-server -h
 
-Usage of wc-lang-packs-server:
+Usage of ./wc-lang-packs-server:
+  -baseurl string
+       	Base URL to access this server (default "https://translation.woocommerce.com")
   -db string
-       	Full path to DB file (default "/var/folders/lk/xzr9s0655d3f54p8t2p2p45h0000gn/T/wc-lang-packs.db")
+       	Full path to DB file (default "/tmp/wc-lang-packs/server.db")
   -downloads-path string
-       	Full path to serve language packs files (default "/var/folders/lk/xzr9s0655d3f54p8t2p2p45h0000gn/T/downloads")
+       	Full path to serve language packs files (default "/tmp/wc-lang-packs/downloads")
   -exposedb
        	Expose /_db/ to dump in-memory DB as JSON
   -gpApiURL string
