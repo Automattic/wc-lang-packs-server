@@ -296,7 +296,7 @@ func (gpc *GPChecker) poll() {
 				if _, ok := db[p.Slug][pv.Slug][ts.WPLocale]; !ok {
 					t = getTranslationByLocale(ts.WPLocale)
 					t.LastModified = ts.LastModified
-					t.Package = buildPackageZip(pv.Path, ts.WPLocale)
+					t.Package = buildPackageZip(pv.Path, ts.Locale, ts.WPLocale)
 
 					db[p.Slug][pv.Slug][ts.WPLocale] = t
 				}
@@ -305,7 +305,7 @@ func (gpc *GPChecker) poll() {
 				if db[p.Slug][pv.Slug][ts.WPLocale].LastModified != ts.LastModified {
 					t = getTranslationByLocale(ts.WPLocale)
 					t.LastModified = ts.LastModified
-					t.Package = buildPackageZip(pv.Path, ts.WPLocale)
+					t.Package = buildPackageZip(pv.Path, ts.Locale, ts.WPLocale)
 
 					db[p.Slug][pv.Slug][ts.WPLocale] = t
 				}
@@ -342,30 +342,30 @@ func getPackageURL(path, lpName string) string {
 
 // buildPackageZip builds the language pack file, .zip file containing .po and
 // .mo files, and returns the URL.
-func buildPackageZip(path, locale string) string {
+func buildPackageZip(path, locale, wp_locale string) string {
 	path = strings.TrimPrefix(path, "woocommerce/")
 	parts := strings.Split(path, "/")
 
-	lpName := fmt.Sprintf("%s-%s-%s.zip", parts[0], parts[1], locale)
+	lpName := fmt.Sprintf("%s-%s-%s.zip", parts[0], parts[1], wp_locale)
 	log.Println("Building language pack " + lpName)
 
-	pomoDir := filepath.Join(os.TempDir(), filepath.Clean(path), locale)
+	pomoDir := filepath.Join(os.TempDir(), filepath.Clean(path), wp_locale)
 	if err := os.MkdirAll(pomoDir, 0755); err != nil {
 		log.Printf("Error creating directory %s for POMO files\n", pomoDir)
 		return ""
 	}
 	defer os.RemoveAll(pomoDir)
 
-	exportURL := *gpURL + "/" + path + "/" + locale
+	exportURL := *gpURL + "woocommerce/" + path + "/" + locale + "/default/export-translations/"
 
-	po := filepath.Join(pomoDir, parts[0]+"-"+locale+".po")
+	po := filepath.Join(pomoDir, parts[0]+"-"+wp_locale+".po")
 	if err := downloadTranslation(exportURL+"?format=po", po); err != nil {
 		log.Printf("Error downloading .po file: %v\n", err)
 		return ""
 	}
 	defer os.Remove(po)
 
-	mo := filepath.Join(pomoDir, parts[0]+"-"+locale+".mo")
+	mo := filepath.Join(pomoDir, parts[0]+"-"+wp_locale+".mo")
 	if err := downloadTranslation(exportURL+"?format=mo", mo); err != nil {
 		log.Printf("Error downloading .mo file: %v\n", err)
 		return ""
