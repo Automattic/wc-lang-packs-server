@@ -176,6 +176,8 @@ func handlePlugins(w http.ResponseWriter, r *http.Request) {
 			jsonError("error_json_encode", err.Error(), w, r)
 			return
 		}
+
+		return
 	}
 
 	if _, ok := db[slug][ver][locale]; !ok {
