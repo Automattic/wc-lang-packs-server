@@ -63,7 +63,7 @@ func (ts *TranslationSet) UnmarshalJSON(data []byte) error {
 			ts.Locale = v.(string)
 		case "wp_locale":
 			ts.WPLocale = v.(string)
-		case "last_modfified":
+		case "last_modified":
 			switch v.(type) {
 			case string:
 				ts.LastModified = v.(string)
